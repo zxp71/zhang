@@ -1,0 +1,29 @@
+<!-- templates/home.html -->
+{% extends "base.html" %}
+{% block title %}首页{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">最近库存变动</h2>
+<table class="table table-hover">
+    <thead class="table-light">
+        <tr>
+            <th>商品名称</th>
+            <th>变动数量</th>
+            <th>操作类型</th>
+            <th>时间</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for change in stock_changes %}
+        <tr>
+            <td>{{ change.product_name }}</td>
+            <td class="{{ 'text-success' if change.operation_type == 'increase' else 'text-danger' }}">
+                {{ change.change_quantity }}
+            </td>
+            <td>{{ '入库' if change.operation_type == 'increase' else '出库' }}</td>
+            <td>{{ change.change_time.strftime('%Y-%m-%d %H:%M') }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

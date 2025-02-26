@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>仓库管理系统 - {% block title %}{% endblock %}</title>
+    
+    <!-- CSS 依赖 -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+
+    <style>
+        .navbar { margin-bottom: 20px; }
+        .table-hover tbody tr:hover { background-color: #f8f9fa; }
+        .unpaid { color: #dc3545; }
+        .status-badge { font-size: 0.8em; }
+        .form-control:focus { box-shadow: none; }
+        .bi { margin-right: 0.3rem; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-box-seam"></i>仓库管理系统
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/transactions">
+                            <i class="bi bi-receipt"></i>交易记录
+                        </a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <span class="navbar-text me-3">
+                        <i class="bi bi-person-circle"></i>{{ session.username }}
+                    </span>
+                    <a href="/logout" class="btn btn-outline-light btn-sm">
+                        <i class="bi bi-box-arrow-right"></i>退出
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show mt-3">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- JavaScript 依赖 -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.1.3/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh.js"></script>
+
+    <script>
+        // 初始化日期选择器
+        flatpickr(".datepicker", {
+            dateFormat: "Y-m-d",
+            locale: "zh",
+            allowInput: true
+        });
+
+        // 自动计算总价逻辑
+        document.addEventListener('DOMContentLoaded', function() {
+            const priceInputs = document.querySelectorAll('.calculate-total');
+            
+            priceInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    const formGroup = this.closest('.row');
+                    const unitPrice = parseFloat(formGroup.querySelector('[name="unit_price"]').value) || 0;
+                    const quantity = parseFloat(formGroup.querySelector('[name="quantity"]').value) || 0;
+                    formGroup.querySelector('#total-preview').textContent = 
+                        (unitPrice * quantity).toLocaleString('zh-CN', {
+                            style: 'currency',
+                            currency: 'CNY',
+                            minimumFractionDigits: 2
+                        });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
