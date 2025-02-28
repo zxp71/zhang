@@ -16,15 +16,14 @@ app.config.update({
 csrf = CSRFProtect(app) 
 
 
-
 # =======================
 # 数据库配置
 # =======================
 DB_CONFIG = {
-    "host": "localhost",
-    "user": "root",
-    "password": "123456",
-    "database": "warehouse_db",
+    "host": "z8dl7f9kwf2g82re.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
+    "user": "iy7tuxqq73x7h86h",
+    "password": "hfzwknw742apifd4",
+    "database": "zy9811ldkw4rallu",
     "cursorclass": pymysql.cursors.DictCursor
 }
 
